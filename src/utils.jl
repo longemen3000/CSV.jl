@@ -236,6 +236,10 @@ function chaincolumns!(@nospecialize(a), @nospecialize(b))
         A = Vector{promote_types(eltype(c), eltype(b))}
     elseif c isa SentinelVector && b isa SentinelVector
         A = vectype(promote_types(Base.nonmissingtype(eltype(c)), Base.nonmissingtype(eltype(b))))
+    elseif c isa PooledVector || b isa PooledVector
+        A = pooledvectype(promote_types(Base.nonmissingtype(eltype(c)), Base.nonmissingtype(eltype(b))))
+    else
+        A = vectype(promote_types(Base.nonmissingtype(eltype(c)), Base.nonmissingtype(eltype(b))))
     end
     x = ChainedVector([_promote(A, x) for x in a.arrays])
     y = _promote(A, b)
